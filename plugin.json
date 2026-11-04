@@ -1,0 +1,9 @@
+{
+  "Id": "ASUSPrimeH610MKD4Lighting",
+  "OpenRGBPluginAPIVersion": 5,
+  "Name": "ASUS PRIME H610M-K D4 Lighting",
+  "Description": "On and off control for the onboard ASUS lighting output",
+  "VersionStr": "0.4.0",
+  "Commit": "",
+  "Url": ""
+}
