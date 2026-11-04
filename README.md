@@ -4,6 +4,16 @@
 
 Windows x64 plugin for ASUS PRIME H610M-K D4 and OpenRGB 1.1 / Plugin API 5. Built with MSVC 2022 and Qt 6.8.3. Uses the existing OpenRGB PawnIOLib.dll and signed LpcIO.bin. Exact motherboard model is checked before commands are enabled.
 
+## Screenshots
+
+The ASUS Lighting tab provides mode selection, color stages, speed controls, and profile management.
+
+![ASUS Lighting control panel in OpenRGB](docs/images/asus-lighting-controls.png)
+
+The plugin appears in OpenRGB's plugin settings as version 0.4.0 with Plugin API 5 support.
+
+![ASUS PRIME H610M-K D4 Lighting plugin enabled in OpenRGB](docs/images/plugin-enabled.png)
+
 ## Install
 
 Close OpenRGB and copy `OpenRGBASUSLighting.dll` into `%APPDATA%\OpenRGB\plugins`. Start OpenRGB as administrator and open the **ASUS Lighting** tab. Keep the original `PawnIOLib.dll` and `LpcIO.bin` beside `OpenRGB.exe`.
