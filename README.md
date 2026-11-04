@@ -16,6 +16,8 @@ The plugin appears in OpenRGB's plugin settings as version 0.4.0 with Plugin API
 
 ## Install
 
+Download the standalone DLL or Windows x64 ZIP from the [v0.4.0 release](https://github.com/TheCrimsonborn/OpenRGB-ASUS-Lighting/releases/tag/v0.4.0). Matching source code and SHA-256 checksums are included in the release assets.
+
 Close OpenRGB and copy `OpenRGBASUSLighting.dll` into `%APPDATA%\OpenRGB\plugins`. Start OpenRGB as administrator and open the **ASUS Lighting** tab. Keep the original `PawnIOLib.dll` and `LpcIO.bin` beside `OpenRGB.exe`.
 
 This controls the motherboard RGB output. RAM, keyboard, and GPU lighting remain separate devices. Other boards are blocked; other OpenRGB/toolchain combinations have not been validated. No ASUS binaries are loaded or distributed by this plugin.

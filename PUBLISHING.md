@@ -1,13 +1,12 @@
 # Publishing to GitHub
 
-Create an empty GitHub repository with the visibility you want. This local repository has no remote and has not been published.
+The public repository is [TheCrimsonborn/OpenRGB-ASUS-Lighting](https://github.com/TheCrimsonborn/OpenRGB-ASUS-Lighting). The initial [v0.4.0 release](https://github.com/TheCrimsonborn/OpenRGB-ASUS-Lighting/releases/tag/v0.4.0) contains the standalone DLL, Windows x64 package, matching source package, and SHA-256 checksums.
 
-From this folder, connect the repository and push:
+The prepared local repository already has `origin` configured. Push subsequent commits and new release tags from this folder:
 
 ```powershell
-git remote add origin <your-GitHub-repository-URL>
 git push -u origin main
-git push origin v0.4.0
+git push origin <new-release-tag>
 ```
 
 For a v0.4.0 release, upload the Windows x64 binary ZIP and matching source ZIP from `dist/` together. The binary package includes the license and dependency notices. `SHA256SUMS.txt` records the standalone plugin DLL hash. Build outputs and binaries are intentionally excluded from the source commit.
