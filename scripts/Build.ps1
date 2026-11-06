@@ -27,7 +27,9 @@ if ($RunChecks) {
         $env:PATH = (Join-Path $QtRoot 'bin') + ';' + $env:PATH
         $env:QT_PLUGIN_PATH = Join-Path $QtRoot 'plugins'
         & (Join-Path $buildDir 'ASUSLightingChecks.exe') $dll
-        if ($LASTEXITCODE -ne 0) { throw 'Plugin checks failed.' }
+        if ($LASTEXITCODE -ne 0) { throw 'ASUS plugin checks failed.' }
+        & (Join-Path $buildDir 'checks\VoidChecks.exe') (Join-Path $buildDir 'plugins\OpenRGBCorsairVoidLighting.dll')
+        if ($LASTEXITCODE -ne 0) { throw 'VOID plugin checks failed.' }
     } finally {
         $env:PATH = $previousPath
         $env:QT_PLUGIN_PATH = $previousPluginPath
@@ -37,4 +39,8 @@ New-Item -ItemType Directory -Path $distDir -Force | Out-Null
 Copy-Item -LiteralPath $dll -Destination (Join-Path $distDir 'OpenRGBASUSLighting.dll') -Force
 $hash = (Get-FileHash -LiteralPath $dll -Algorithm SHA256).Hash.ToLowerInvariant()
 "$hash  OpenRGBASUSLighting.dll" | Set-Content -LiteralPath (Join-Path $distDir 'SHA256SUMS.txt') -Encoding ascii
-Write-Host "Build ready: $distDir"
+$voidDll = Join-Path $buildDir 'plugins\OpenRGBCorsairVoidLighting.dll'
+Copy-Item -LiteralPath $voidDll -Destination (Join-Path $distDir 'OpenRGBCorsairVoidLighting.dll') -Force
+$voidHash = (Get-FileHash -LiteralPath $voidDll -Algorithm SHA256).Hash.ToLowerInvariant()
+"$voidHash  OpenRGBCorsairVoidLighting.dll" | Add-Content -LiteralPath (Join-Path $distDir 'SHA256SUMS.txt') -Encoding ascii
+Write-Host "Both independent plugins are ready: $distDir"

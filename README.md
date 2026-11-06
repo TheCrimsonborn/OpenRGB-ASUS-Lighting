@@ -1,10 +1,19 @@
-> **Disclaimer:** This project was created entirely using **Codex 6.1 Sol**. It has only been tested on the **ASUS PRIME H610M-K D4 motherboard**. Compatibility with any other motherboard or hardware configuration has not been tested or verified.
+> **Disclaimer:** This project was created entirely using **Codex 6.1 Sol**. The motherboard functionality has only been tested on the **ASUS PRIME H610M-K D4 motherboard**. Headset functionality targets only the **Corsair VOID ELITE USB (VID 1B1C, PID 0A56)**. Compatibility with other devices or configurations has not been tested or verified.
 
-# OpenRGB ASUS Lighting 0.4.0
+# OpenRGB ASUS and Corsair VOID Lighting 0.5.0
 
-Windows x64 plugin for ASUS PRIME H610M-K D4 and OpenRGB 1.1 / Plugin API 5. Built with MSVC 2022 and Qt 6.8.3. Uses the existing OpenRGB PawnIOLib.dll and signed LpcIO.bin. Exact motherboard model is checked before commands are enabled.
+Two independent Windows x64 plugins for OpenRGB 1.1 / Plugin API 5, built with MSVC 2022 and Qt 6.8.3. Install either DLL or both. Each plugin has its own identity and appears as a separate page in the **Devices** left sidebar.
+
+| Plugin DLL | Devices sidebar page | Controls |
+| --- | --- | --- |
+| `OpenRGBASUSLighting.dll` | ASUS Lighting | Motherboard Static, Blinking, Fading, Strobing, OFF; color stages, speeds, profiles |
+| `OpenRGBCorsairVoidLighting.dll` | VOID Headset | Headset LED On / Off; restores the headset's existing effect when enabled |
+
+The ASUS plugin uses OpenRGB's existing PawnIOLib.dll and signed LpcIO.bin. The VOID plugin uses OpenRGB's existing hidapi-hotplug.dll. No ASUS, Corsair, Qt, or driver binaries are bundled.
 
 ## Screenshots
+
+These screenshots show the ASUS plugin in version 0.4.0. In version 0.5.0 both control pages are in the Devices sidebar instead of top-level tabs.
 
 The ASUS Lighting tab provides mode selection, color stages, speed controls, and profile management.
 
@@ -16,13 +25,13 @@ The plugin appears in OpenRGB's plugin settings as version 0.4.0 with Plugin API
 
 ## Install
 
-Download the standalone DLL or Windows x64 ZIP from the [v0.4.0 release](https://github.com/TheCrimsonborn/OpenRGB-ASUS-Lighting/releases/tag/v0.4.0). Matching source code and SHA-256 checksums are included in the release assets.
+Download the DLL(s) you want from [Releases](https://github.com/TheCrimsonborn/OpenRGB-ASUS-Lighting/releases). Each plugin has a separate DLL and Windows x64 ZIP. The matching source ZIP contains both plugins.
 
-Close OpenRGB and copy `OpenRGBASUSLighting.dll` into `%APPDATA%\OpenRGB\plugins`. Start OpenRGB as administrator and open the **ASUS Lighting** tab. Keep the original `PawnIOLib.dll` and `LpcIO.bin` beside `OpenRGB.exe`.
+Close OpenRGB and copy either or both plugin DLLs into `%APPDATA%\OpenRGB\plugins`. Start OpenRGB as administrator, open **Devices**, and select **ASUS Lighting** or **VOID Headset** in the left sidebar. Keep the original `PawnIOLib.dll`, `LpcIO.bin`, and `hidapi-hotplug.dll` beside `OpenRGB.exe`.
 
 This controls the motherboard RGB output. RAM, keyboard, and GPU lighting remain separate devices. Other boards are blocked; other OpenRGB/toolchain combinations have not been validated. No ASUS binaries are loaded or distributed by this plugin.
 
-## Controls
+## ASUS controls
 
 Select Static, Blinking, Fading, Strobing, or OFF. Choose 1, 2, 4, or 8 color stages, and click each stage to choose its color. The selected sequence repeats across the eight hardware entries. Colors have 4-bit precision per channel. Blinking and Strobing expose Slow, Middle, and Fast; the other modes use the vendor timing defaults. Apply sends the selected settings; Turn off sends OFF immediately. Merely selecting settings or opening the plugin sends no lighting commands.
 
@@ -30,7 +39,13 @@ Save profile and Load profile use JSON files. OpenRGB profile save/load also sto
 
 Close AI Suite and other motherboard control applications before applying settings, to avoid simultaneous access. No reboot is required by the plugin.
 
-## Hardware mapping evidence
+## VOID headset controls
+
+Use **Turn headset LEDs on** or **Turn headset LEDs off**. The plugin targets only USB 1B1C:0A56, interface 3, usage FFC5:0001; other HID collections are ignored. Each click re-enumerates the interface and sends one LED packet. Loading the plugin sends no lighting commands, and the physical LED state is not queried. Headset color/effect selection, audio, microphone, firmware, and native RGB device/SDK control are outside this plugin page.
+
+See [the headset plugin README](plugins/CorsairVoid/README.md) for the packet reference and implementation details.
+
+## ASUS hardware mapping evidence
 
 Static analysis of installed Light Control SIORGB.dll 1.00.28:
 
@@ -61,13 +76,13 @@ Open **x64 Native Tools Command Prompt for VS 2022**, start PowerShell there, th
 .\scripts\Build.ps1 -QtRoot "C:\Qt\6.8.3\msvc2022_64" -OpenRGBSource ".\external\OpenRGB" -RunChecks
 ```
 
-The script builds Release with NMake and writes the DLL plus SHA-256 checksum to `dist/`. It does not install the plugin or send hardware commands. Generated `build/`, `dist/`, and downloaded `external/` dependencies are excluded from Git. Use a clean build directory if changing generators or compilers.
+The script builds Release with NMake and writes both DLLs plus their SHA-256 checksums to `dist/`. It builds both independent DLLs, does not install them, and sends no hardware commands. Generated `build/`, `dist/`, and downloaded `external/` dependencies are excluded from Git. Use a clean build directory if changing generators or compilers.
 
 For manual CMake configuration, set `OPENRGB_SOURCE_DIR` to a complete OpenRGB 1.1 source tree and `CMAKE_PREFIX_PATH` to the matching Qt kit.
 
-Enable ASUS_LIGHTING_BUILD_CHECKS to build ASUSLightingChecks. Run it with the full plugin DLL path and the matching Qt bin directory on PATH. Checks cover vendor mode/speed constants, nibble packing, range rejection, mode/speed/stage UI behavior, OpenRGB profile round-trip, and invalid-profile preservation. They do not invoke hardware commands.
+Enable ASUS_LIGHTING_BUILD_CHECKS to build ASUSLightingChecks and VoidChecks. Run it with the full plugin DLL path and the matching Qt bin directory on PATH. Checks cover vendor mode/speed constants, nibble packing, range rejection, mode/speed/stage UI behavior, OpenRGB profile round-trip, and invalid-profile preservation. They do not invoke hardware commands.
 
-Checks passed with the Qt 6.8.3 MSVC build. The build script compiles serially to limit memory use.
+Checks for both plugins passed with the Qt 6.8.3 MSVC build. The VOID checks verify exact HID targeting, packet bytes, sidebar placement, UI construction, and unload without sending HID writes. The build script compiles serially to limit memory use.
 
 Reference: [PawnIO LPC module](https://github.com/namazso/PawnIO.Modules/blob/main/LpcIO.p).
 

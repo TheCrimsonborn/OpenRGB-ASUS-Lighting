@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(OpenRGBASUSLighting VERSION 0.4.0 LANGUAGES CXX)
+project(OpenRGBASUSLighting VERSION 0.5.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -47,3 +47,6 @@ if(ASUS_LIGHTING_BUILD_CHECKS)
     target_link_libraries(ASUSLightingChecks PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
     target_compile_definitions(ASUSLightingChecks PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN)
 endif()
+
+# Independent DLL with its own plugin ID and device panel.
+add_subdirectory(plugins/CorsairVoid)

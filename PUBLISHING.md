@@ -1,14 +1,9 @@
 # Publishing to GitHub
 
-The public repository is [TheCrimsonborn/OpenRGB-ASUS-Lighting](https://github.com/TheCrimsonborn/OpenRGB-ASUS-Lighting). The initial [v0.4.0 release](https://github.com/TheCrimsonborn/OpenRGB-ASUS-Lighting/releases/tag/v0.4.0) contains the standalone DLL, Windows x64 package, matching source package, and SHA-256 checksums.
+Public repository: [TheCrimsonborn/OpenRGB-ASUS-Lighting](https://github.com/TheCrimsonborn/OpenRGB-ASUS-Lighting).
 
-The prepared local repository already has `origin` configured. Push subsequent commits and new release tags from this folder:
+Version 0.5.0 ships two independent plugins. Attach both standalone DLLs and their separate Windows x64 ZIPs to the release, together with the matching source ZIP and SHA256SUMS.txt. A user can install either plugin without the other.
 
-```powershell
-git push -u origin main
-git push origin <new-release-tag>
-```
+Build and validate with scripts/Build.ps1 -RunChecks, commit the matching source, create a new version tag, and push main plus that tag. Generate the source archive from the tagged commit. Do not replace previous release tags or assets when publishing a new version.
 
-For a v0.4.0 release, upload the Windows x64 binary ZIP and matching source ZIP from `dist/` together. The binary package includes the license and dependency notices. `SHA256SUMS.txt` records the standalone plugin DLL hash. Build outputs and binaries are intentionally excluded from the source commit.
-
-The supported application is OpenRGB 1.1 with the MSVC Qt 6.8.3 runtime. Describe that compatibility in the release notes; the DLL is not a universal plugin for every OpenRGB build.
+The supported runtime is Windows x64 OpenRGB 1.1 with MSVC Qt 6.8.3. Keep this compatibility information in release notes.

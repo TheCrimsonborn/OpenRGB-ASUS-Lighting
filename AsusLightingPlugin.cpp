@@ -128,10 +128,10 @@ OpenRGBPluginInfo AsusLightingPlugin::GetPluginInfo()
     OpenRGBPluginInfo info;
     info.Name = "ASUS PRIME H610M-K D4 Lighting";
     info.Description = "Static, Blinking, Fading, Strobing, and OFF with color stages and profiles";
-    info.Version = "0.4.0";
+    info.Version = "0.5.0";
     info.Commit = "";
     info.URL = "";
-    info.Location = OPENRGB_PLUGIN_LOCATION_TOP;
+    info.Location = OPENRGB_PLUGIN_LOCATION_DEVICES;
     info.Label = "ASUS Lighting";
     info.TabIconString = "";
     info.ProtocolVersion = 0;

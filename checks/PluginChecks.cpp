@@ -24,7 +24,7 @@ int main(int argc,char** argv)
     s.colors={Qt::red,Qt::green,Qt::blue};CHECK(!EncodeLighting(s,&e,&error));s.colors={Qt::red};s.speed=3;CHECK(!EncodeLighting(s,&e,&error));
     CHECK(argc>1); QPluginLoader loader(QString::fromLocal8Bit(argv[1]));auto* instance=loader.instance();
     if(!instance) std::fprintf(stderr,"%s\n",loader.errorString().toUtf8().constData());
-    CHECK(instance);auto* plugin=qobject_cast<OpenRGBPluginInterface*>(instance);CHECK(plugin);CHECK(plugin->GetPluginAPIVersion()==5);plugin->Load(nullptr);
+    CHECK(instance);auto* plugin=qobject_cast<OpenRGBPluginInterface*>(instance);CHECK(plugin);CHECK(plugin->GetPluginAPIVersion()==5);CHECK(plugin->GetPluginInfo().Location==OPENRGB_PLUGIN_LOCATION_DEVICES);plugin->Load(nullptr);
     QWidget* w=plugin->GetWidget();CHECK(w);
     auto* mode=w->findChild<QComboBox*>("lightingMode");auto* speed=w->findChild<QComboBox*>("lightingSpeed");auto* stages=w->findChild<QComboBox*>("lightingStages");
     CHECK(mode&&speed&&stages);CHECK(mode->count()==5);CHECK(stages->count()==4);
