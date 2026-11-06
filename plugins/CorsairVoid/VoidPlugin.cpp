@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "VoidPlugin.h"
+#include "../../NativeSetups.h"
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QMetaObject>
@@ -7,7 +8,7 @@
 OpenRGBPluginInfo VoidPlugin::GetPluginInfo() {
     OpenRGBPluginInfo info{};info.Name="Corsair VOID ELITE USB Lighting";
     info.Description="Headset LED on/off for Corsair VOID ELITE USB (1B1C:0A56)";
-    info.Version="0.5.0";info.Location=OPENRGB_PLUGIN_LOCATION_DEVICES;info.Label="VOID Headset";
+    info.Version="0.5.0";info.Commit=PLUGIN_GIT_COMMIT;info.URL=PLUGIN_PROJECT_URL;info.Location=OPENRGB_PLUGIN_LOCATION_SETTINGS;info.Label="VOID Headset";
     return info;
 }
 void VoidPlugin::Load(OpenRGBPluginAPIInterface* api) {
@@ -18,20 +19,22 @@ void VoidPlugin::Load(OpenRGBPluginAPIInterface* api) {
     auto* on=new QPushButton("Turn headset LEDs on",widget_);auto* off=new QPushButton("Turn headset LEDs off",widget_);
     on->setObjectName("headsetOn");off->setObjectName("headsetOff");layout->addWidget(on);layout->addWidget(off);
     status_=new QLabel("No command sent.",widget_);status_->setWordWrap(true);layout->addWidget(status_);layout->addStretch();
-    connect(on,&QPushButton::clicked,this,[this](){Send(true);});
-    connect(off,&QPushButton::clicked,this,[this](){Send(false);});
-    QString error;const bool found=hid_.Detect(&error);Status(found?"Headset found. No command sent.":error);
+    connect(on,&QPushButton::clicked,this,[this](){if(native_.device)native_.device->SetActiveMode(1);else Send(true);});
+    connect(off,&QPushButton::clicked,this,[this](){if(native_.device)native_.device->SetActiveMode(0);else Send(false);});
+    QString error;const bool found=hid_.Detect(&error);Status(found?"Headset found. Use Devices to select On or Off. No command sent.":error);
+    if(found&&api_){auto setup=VoidNativeSetup(this,&VoidPlugin::UpdateNative);if(!native_.Start(api_,setup))Status("Could not register the headset device.");}
 
 }
 void VoidPlugin::Status(const QString& text) {
     QPointer<QLabel> label=status_;if(!label)return;
     QMetaObject::invokeMethod(label.data(),[label,text](){if(label)label->setText(text);},Qt::QueuedConnection);
 }
+void VoidPlugin::UpdateNative(void* self){auto* p=static_cast<VoidPlugin*>(self);if(p->closing_||!p->native_.device)return;const int active=p->native_.device->GetActiveMode();if(active==0||active==1)p->Send(active==1);}
 void VoidPlugin::Send(bool on) {
     if(closing_)return;QString error;const bool ok=hid_.SetLights(on,&error);
     Status(ok?(on?"LED ON command sent. Check the headset.":"LED OFF command sent. Check the headset."):error);
     if(api_)api_->LogEntry("VoidPlugin.cpp",__LINE__,ok?3:1,"[VOID headset] LED %s: %s",on?"ON":"OFF",ok?"HID write accepted":error.toUtf8().constData());
 }
 void VoidPlugin::Unload() {
-    closing_=true;delete widget_;widget_=nullptr;status_.clear();api_=nullptr;
+    closing_=true;native_.Stop();delete widget_;widget_=nullptr;status_.clear();api_=nullptr;
 }

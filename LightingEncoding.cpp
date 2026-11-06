@@ -4,8 +4,8 @@
 bool EncodeLighting(const LightingSettings& s, LightingEncoding* e, QString* error)
 {
     if (s.mode < LightingSettings::Static || s.mode > LightingSettings::Off || s.speed < 0 || s.speed > 2 ||
-        !(s.colors.size() == 1 || s.colors.size() == 2 || s.colors.size() == 4 || s.colors.size() == 8))
-    { if(error) *error = "Invalid mode, speed, or stage count (use 1, 2, 4, or 8)."; return false; }
+        (s.colors.size() < 1 || s.colors.size() > 8))
+    { if(error) *error = "Invalid mode, speed, or stage count (use 1 to 8)."; return false; }
     for(const QColor& c : s.colors) if(!c.isValid())
     { if(error) *error = "Invalid stage color."; return false; }
     *e = LightingEncoding{};

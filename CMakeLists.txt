@@ -22,7 +22,7 @@ add_library(OpenRGBASUSLighting MODULE
     LightingEncoding.cpp
     AsioSuperIo.cpp
     AsioSuperIo.h
-    plugin.json
+    plugin.json.in
 )
 
 target_include_directories(OpenRGBASUSLighting PRIVATE
@@ -50,3 +50,6 @@ endif()
 
 # Independent DLL with its own plugin ID and device panel.
 add_subdirectory(plugins/CorsairVoid)
+
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/PluginMetadata.cmake")
+configure_lighting_metadata(OpenRGBASUSLighting "${CMAKE_CURRENT_SOURCE_DIR}/plugin.json.in" "AsusPluginMetadata.json" "https://github.com/TheCrimsonborn/OpenRGB-ASUS-Lighting")

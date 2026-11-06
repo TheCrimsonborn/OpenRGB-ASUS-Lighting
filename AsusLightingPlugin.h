@@ -2,6 +2,10 @@
 #pragma once
 
 #include <QObject>
+#include <QPointer>
+#include <QLabel>
+#include <atomic>
+#include "NativeController.h"
 
 #include "OpenRGBPluginInterface.h"
 
@@ -10,7 +14,7 @@ class QWidget;
 class AsusLightingPlugin final : public QObject, public OpenRGBPluginInterface
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID OpenRGBPluginInterface_IID FILE "plugin.json")
+    Q_PLUGIN_METADATA(IID OpenRGBPluginInterface_IID FILE "AsusPluginMetadata.json")
     Q_INTERFACES(OpenRGBPluginInterface)
 
 public:
@@ -30,4 +34,11 @@ public:
 
 private:
     QWidget* widget_ = nullptr;
+    QPointer<QLabel> status_;
+    OpenRGBPluginAPIInterface* api_=nullptr;
+    NativeController native_;
+    std::atomic<bool> closing_{false};
+    static void UpdateNative(void* self);
+    void ApplyNative();
+    void Status(const QString& text);
 };

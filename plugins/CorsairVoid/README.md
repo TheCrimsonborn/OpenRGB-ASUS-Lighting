@@ -2,9 +2,9 @@
 
 Independent OpenRGB 1.1 / Plugin API 5 extension for Windows x64, MSVC, and Qt 6.8.3.
 
-Open **Devices** and select **VOID Headset** in the left sidebar. The page provides **Turn headset LEDs on** and **Turn headset LEDs off**. Enabling the LEDs restores the headset's existing lighting effect; this plugin does not select colors or effects.
+Open **Devices** and select the headset icon for **Corsair VOID ELITE USB**. Choose **On** or **Off** in the native Mode control. Its device details appear under Information. A diagnostic page with explicit buttons is available under Settings. Enabling the LEDs restores the headset's existing lighting effect; this plugin does not select colors or effects.
 
-The plugin targets only VID 1B1C, PID 0A56, USB interface 3, usage page FFC5, usage 0001. Enumeration must yield exactly one matching interface. Each button resolves the current device path, opens the interface, submits one three-byte LED payload, and closes it. Windows may pad the payload to the device's output report size. No commands are sent merely by loading the page. Physical LED state is not queried.
+The plugin targets only VID 1B1C, PID 0A56, USB interface 3, usage page FFC5, usage 0001. Enumeration must yield exactly one matching interface. Each button resolves the current device path, opens the interface, submits one three-byte LED payload, and closes it. Windows may pad the payload to the device's output report size. The host may apply device defaults or saved profiles during registration/startup. Physical LED state is not queried.
 
 The user confirmed LED OFF physically works on the connected headset. The ON packet follows the same protocol, but physical ON behavior has not yet been confirmed. Protocol reference: https://github.com/Sapd/HeadsetControl/blob/master/lib/devices/corsair_void_rich.hpp (setLights).
 

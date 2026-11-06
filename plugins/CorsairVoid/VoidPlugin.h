@@ -3,11 +3,13 @@
 #include <QObject>
 #include <QPointer>
 #include <QLabel>
+#include <atomic>
+#include "../../NativeController.h"
 #include "OpenRGBPluginInterface.h"
 #include "VoidHid.h"
 class VoidPlugin final:public QObject,public OpenRGBPluginInterface {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID OpenRGBPluginInterface_IID FILE "plugin.json")
+    Q_PLUGIN_METADATA(IID OpenRGBPluginInterface_IID FILE "VoidPluginMetadata.json")
     Q_INTERFACES(OpenRGBPluginInterface)
 public:
     OpenRGBPluginInfo GetPluginInfo() override;
@@ -30,5 +32,7 @@ private:
     QWidget* widget_=nullptr;
     QPointer<QLabel> status_;
     VoidHid hid_;
-    bool closing_=false;
+    std::atomic<bool> closing_{false};
+    NativeController native_;
+    static void UpdateNative(void* self);
 };

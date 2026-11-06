@@ -4,7 +4,9 @@
 
 - Ships two independently installable plugins and DLLs in one repository.
 - Added Corsair VOID ELITE USB (1B1C:0A56) LED On/Off controls.
-- Both ASUS Lighting and VOID Headset appear inside the Devices sidebar.
+- Both plugins register native controllers: Devices and Information use standard motherboard/headset icons.
+- Native OpenRGB modes, color stages, speeds, and profiles replace the former custom ASUS control page.
+- Commit and URL metadata are generated from the actual source revision.
 - Added headset target/packet/UI checks without hardware writes.
 
 ## 0.4.1
